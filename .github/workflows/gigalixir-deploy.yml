@@ -1,0 +1,41 @@
+name: Deploy to Gigalixir
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Elixir
+      uses: erlef/setup-elixir@v1
+      with:
+        otp-version: '24.x'
+        elixir-version: '1.13.x'
+        
+    - name: Build and test
+      run: |
+        mix deps.get
+        mix test
+        
+    - name: Install Gigalixir CLI
+      run: |  
+        sudo apt-get install -y python3 python3-pip
+        pip3 install gigalixir
+        
+    - name: Deploy to Gigalixir
+      env:
+        GIGALIXIR_EMAIL: ${{ secrets.GIGALIXIR_EMAIL }}
+        GIGALIXIR_PASSWORD: ${{ secrets.GIGALIXIR_PASSWORD }}
+        GIGALIXIR_APP_NAME: ${{ secrets.GIGALIXIR_APP_NAME }}
+      run: |
+        gigalixir login -e "$GIGALIXIR_EMAIL" -p "$GIGALIXIR_PASSWORD" -y
+        gigalixir git:remote $GIGALIXIR_APP_NAME
+        git push -f gigalixir HEAD:refs/heads/main
