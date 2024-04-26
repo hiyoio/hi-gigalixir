@@ -17,13 +17,15 @@ jobs:
 
     - name: Install Elixir
       run: |
+        wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
+        sudo dpkg -i erlang-solutions_2.0_all.deb
         sudo apt-get update
-        sudo apt-get install -y elixir
+        sudo apt-get install -y elixir=1.13.4 erlang-solutions_2.0
 
     - name: Build and test
       run: |
         cd $GITHUB_WORKSPACE
-        mix local.hex --force  
+        mix local.hex --force
         mix deps.get
         mix test
         
