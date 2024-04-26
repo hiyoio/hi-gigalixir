@@ -3,7 +3,7 @@ defmodule MyApp.MixProject do
 
   def project do
     [
-      app: :hi-gigalixir,
+      app: :my_app,
       version: "0.1.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
