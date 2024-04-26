@@ -1,36 +1,34 @@
-defmodule MyApp.MixProject do
-  use Mix.Project
+name: Deploy to Gigalixir
 
-  def project do
-    [
-      app: :hi-gigalixir,
-      version: "0.1.0",
-      elixir: "~> 1.13",
-      start_permanent: Mix.env() == :prod,
-      deps: deps()
-    ]
-  end
+on:
+  push:
+    branches:
+      - main  # 或者您使用的是哪个分支
 
-  def application do
-    [
-      extra_applications: [:logger]
-    ]
-  end
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-  defp deps do
-    [
-      {:phoenix, "~> 1.6.6"},
-      {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.17.5"},
-      {:floki, ">= 0.30.0", only: :test},
-      {:phoenix_live_dashboard, "~> 0.6"},
-      {:esbuild, "~> 0.3", runtime: Mix.env() == :dev},
-      {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.18"},
-      {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"}
-    ]
-  end
-end
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'  # 根据您的项目指定Python版本
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Login to Gigalixir
+      run: |
+        pip install gigalixir
+        gigalixir login -e ${{ secrets.GIGALIXIR_EMAIL }} -p ${{ secrets.GIGALIXIR_PASSWORD }} -y
+
+    - name: Push to Gigalixir
+      run: |
+        git remote add gigalixir https://git.gigalixir.com/${{ secrets.GIGALIXIR_APP_NAME }}.git
+        git push gigalixir main
+
