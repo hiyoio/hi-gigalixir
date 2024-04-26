@@ -15,13 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Setup Elixir
-      uses: erlef/setup-elixir@v1
-      with:
-        otp-version: '24.x'
-        elixir-version: '1.13.x'
-
-    - name: Build and test  
+    - name: Build and test
       run: |
         cd $GITHUB_WORKSPACE
         mix deps.get
