@@ -14,7 +14,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
+
+    - name: Install Elixir
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y elixir
+
     - name: Build and test
       run: |
         cd $GITHUB_WORKSPACE
