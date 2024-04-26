@@ -5,7 +5,7 @@ defmodule YourApp.MixProject do
     [
       app: :hi-gigalixir,
       version: "0.1.0",
-      elixir: "~> 1.11",
+      elixir: "~> 1.13",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -14,19 +14,16 @@ defmodule YourApp.MixProject do
     ]
   end
 
-  # Specify your project's environment-specific options here.
   defp elixirc_paths(:prod), do: ["lib", "priv/repo/migrations"]
   defp elixirc_paths(_), do: ["lib"]
 
-  # Define tasks here if required.
   defp aliases do
     [
-      "setup": ["deps.get", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      setup: ["deps.get", "ecto.setup"],
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 
-  # List of dependencies required by the project
   defp deps do
     [
       {:phoenix, "~> 1.5.7"},
