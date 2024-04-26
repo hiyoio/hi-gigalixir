@@ -17,10 +17,17 @@ jobs:
 
     - name: Install Elixir
       run: |
-        wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb
-        sudo dpkg -i erlang-solutions_2.0_all.deb
-        sudo apt-get update
-        sudo apt-get install -y elixir=1.13.4 erlang-solutions_2.0
+        sudo apt-get install -y curl git
+        git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
+        echo ". $HOME/.asdf/asdf.sh" >> ~/.bashrc
+        echo ". $HOME/.asdf/completions/asdf.bash" >> ~/.bashrc
+        . $HOME/.asdf/asdf.sh
+        asdf plugin add erlang
+        asdf plugin add elixir
+        asdf install erlang 25.2
+        asdf install elixir 1.13.4
+        asdf global erlang 25.2
+        asdf global elixir 1.13.4
 
     - name: Build and test
       run: |
